@@ -1,4 +1,6 @@
 using DI_Project.Data;
+using DI_Project.Services;
+using DI_Project.Utility.AppSettingsClasses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +17,14 @@ namespace DI_Project
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+            builder.Services.AddTransient<IMarketForecaster, MarketForecasterV2>();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.Configure<WazeForecastSettings>(builder.Configuration.GetSection("WazeForecast"));
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGrid"));
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
 
             var app = builder.Build();
 

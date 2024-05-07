@@ -2,7 +2,7 @@
 
 namespace DI_Project.Services
 {
-    public class MarketForecaster: IMarketForecaster
+    public class MarketForecasterV2 : IMarketForecaster
     {
         public MarketResult GetMarketPrediction()
         {
@@ -10,7 +10,7 @@ namespace DI_Project.Services
 
             return new MarketResult
             {
-                MarketCondition = MarketCondition.StableUp
+                MarketCondition = MarketCondition.Volatile
             };
         }
     }
