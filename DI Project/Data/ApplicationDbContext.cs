@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DI_Project.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DI_Project.Data
@@ -9,5 +10,6 @@ namespace DI_Project.Data
             : base(options)
         {
         }
+        public DbSet<CreditApplication> CreditApplicationModel { get; set; }
     }
 }
