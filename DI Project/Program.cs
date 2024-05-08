@@ -1,4 +1,5 @@
 using DI_Project.Data;
+using DI_Project.MiddleWare;
 using DI_Project.Services;
 using DI_Project.Utility.AppSettingsClasses;
 using DI_Project.Utility.DI_Config;
@@ -22,6 +23,7 @@ namespace DI_Project
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddLifetimeServices();
             builder.Services.AddAppSettingsConfig(builder.Configuration);
 
             var app = builder.Build();
@@ -44,7 +46,7 @@ namespace DI_Project
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseMiddleware<CustomMiddleware>();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
