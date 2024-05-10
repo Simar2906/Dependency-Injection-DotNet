@@ -16,18 +16,25 @@ namespace DI_Project.Controllers
         private readonly ICreditValidator _creditValidator;
         private readonly WazeForecastSettings _wazeOptions;
         private readonly ApplicationDbContext _db;
+        private readonly ILogger _logger;
 
         [BindProperty]
         public CreditApplication CreditModel { get; set; }
-        public HomeController(IMarketForecaster marketForecaster, IOptions<WazeForecastSettings> wazeOptions, ICreditValidator creditValidator, ApplicationDbContext db) {
+        public HomeController(IMarketForecaster marketForecaster, 
+            IOptions<WazeForecastSettings> wazeOptions, 
+            ICreditValidator creditValidator, 
+            ApplicationDbContext db,
+            ILogger<HomeController> logger) {
             homeVM = new HomeVM();
             _marketForecaster = marketForecaster;
             _wazeOptions = wazeOptions.Value;
             _creditValidator = creditValidator;
             _db = db;
+            _logger = logger;
         }
         public IActionResult Index()
         {
+            _logger.LogInformation("Index Started");
             MarketResult currentMarket = _marketForecaster.GetMarketPrediction();
 
             switch (currentMarket.MarketCondition)
@@ -46,6 +53,7 @@ namespace DI_Project.Controllers
                     break;
 
             }
+            _logger.LogInformation("Index Ended");
             return View(homeVM);
         }
 
