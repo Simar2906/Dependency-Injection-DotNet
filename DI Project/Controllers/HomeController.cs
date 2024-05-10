@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using DI_Project.Data;
+using DI_Project.Data.Repository;
+using DI_Project.Data.Repository.IRepository;
 using DI_Project.Models;
 using DI_Project.Models.ViewModels;
 using DI_Project.Services;
@@ -15,21 +17,21 @@ namespace DI_Project.Controllers
         private readonly IMarketForecaster _marketForecaster;
         private readonly ICreditValidator _creditValidator;
         private readonly WazeForecastSettings _wazeOptions;
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         [BindProperty]
         public CreditApplication CreditModel { get; set; }
         public HomeController(IMarketForecaster marketForecaster, 
             IOptions<WazeForecastSettings> wazeOptions, 
-            ICreditValidator creditValidator, 
-            ApplicationDbContext db,
+            ICreditValidator creditValidator,
+            IUnitOfWork unitOfWork,
             ILogger<HomeController> logger) {
             homeVM = new HomeVM();
             _marketForecaster = marketForecaster;
             _wazeOptions = wazeOptions.Value;
             _creditValidator = creditValidator;
-            _db = db;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
         public IActionResult Index()
@@ -103,8 +105,8 @@ namespace DI_Project.Controllers
                         : CreditApprovedEnum.Low)
                         .GetCreditApproved(CreditModel);
                     //add record to DB
-                    _db.CreditApplicationModel.Add(CreditModel);
-                    _db.SaveChanges();
+                    _unitOfWork.CreditApplicationRepository.Add(CreditModel);
+                    _unitOfWork.Save();
                     creditResult.CreditID = CreditModel.Id;
                     creditResult.CreditApproved = CreditModel.CreditApproved;
                     return RedirectToAction(nameof(CreditResult), creditResult);

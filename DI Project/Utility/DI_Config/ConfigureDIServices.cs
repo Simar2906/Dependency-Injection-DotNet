@@ -1,4 +1,6 @@
 ﻿using DI_Project.Data;
+using DI_Project.Data.Repository;
+using DI_Project.Data.Repository.IRepository;
 using DI_Project.Models;
 using DI_Project.Services;
 using DI_Project.Utility.AppSettingsClasses;
@@ -26,7 +28,7 @@ namespace DI_Project.Utility.DI_Config
                 ServiceDescriptor.Scoped<IValidationChecker, CreditValidationChecker>()
             });
             services.AddScoped<ICreditValidator, CreditValidator>();
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<CreditApprovedHigh>();
             services.AddScoped<CreditApprovedLow>();
